@@ -39,10 +39,10 @@ def _find_images_and_annotation(root_dir):
             if i_line == 0:
                 image_total = int(line)
             elif i_line == 1:
-                attrs = line.split(" ")
+                attrs = line.split(",")[1:]
             else:
                 line = re.sub("[ ]+", " ", line)
-                line = line.split(" ")
+                line = line.split(",")
                 fname = os.path.splitext(line[0])[0]
                 onehot = [int(int(d) > 0) for d in line[1:]]
                 assert len(onehot) == len(attrs), "{} only has {} attrs < {}".format(
@@ -71,6 +71,8 @@ class CelebADataset(Dataset):
         path = data["path"]
         attr = data["attr"]
         image= Image.open(path).convert("RGB")
+        # temp = np.array(image)
+        # image = temp
         if self.transform is not None:
             image = self.transform(image)
         return {
